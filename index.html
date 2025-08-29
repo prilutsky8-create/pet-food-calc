@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Калькулятор подбора корма</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label {display: block; margin-top: 10px;}
+        .result {margin-top: 20px; background: #f2f2f2; padding: 10px;}
+        .brand-list {margin-top:10px;}
+    </style>
+</head>
+<body>
+    <h1>Калькулятор подбора корма</h1>
+    <form id="food-form">
+        <label>
+            Вид животного:
+            <select id="type">
+                <option value="dog">Собака</option>
+                <option value="cat">Кошка</option>
+            </select>
+        </label>
+        <label>
+            Порода:
+            <input type="text" id="breed" required>
+        </label>
+        <label>
+            Возраст (лет):
+            <input type="number" id="age" min="0" step="0.1" required>
+        </label>
+        <label>
+            Вес (кг):
+            <input type="number" id="weight" min="0" step="0.1" required>
+        </label>
+        <label>
+            Особые потребности:
+            <input type="text" id="special">
+        </label>
+        <button type="submit">Подобрать корм</button>
+    </form>
+
+    <div class="result" id="result"></div>
+
+    <script>
+    const brands = [
+        "Royal Canin",
+        "Acana",
+        "Farmina",
+        "Hill's",
+        "Purina Pro Plan",
+        "Brit Care",
+        "Tom и Jerry"
+        // сюда добавьте другие бренды по необходимости
+    ];
+
+    document.getElementById('food-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var type = document.getElementById('type').value;
+        var breed = document.getElementById('breed').value.trim();
+        var age = parseFloat(document.getElementById('age').value);
+        var weight = parseFloat(document.getElementById('weight').value);
+        var special = document.getElementById('special').value.trim();
+
+        var recommendation = "";
+        if (type === "dog") {
+            if (age < 1) recommendation = "Щенячий корм для " + breed;
+            else if (age < 7) recommendation = "Взрослый корм для " + breed;
+            else recommendation = "Корм для пожилых собак " + breed;
+        } else {
+            if (age < 1) recommendation = "Корм для котят " + breed;
+            else if (age < 10) recommendation = "Взрослый корм для кошки породы " + breed;
+            else recommendation = "Корм для пожилых кошек, порода: " + breed;
+        }
+        if (special) {
+            recommendation += ". Учтите особые требования: " + special;
+        }
+        recommendation += ". Рекомендованная дневная норма: " + (weight * 30 + 70).toFixed(0) + " ккал (оценочно).";
+
+        let brandList = "<div class='brand-list'><b>Рекомендуемые бренды:</b><ul>";
+        brands.forEach(function(b){
+            brandList += "<li>" + b + "</li>";
+        });
+        brandList += "</ul></div>";
+
+        document.getElementById('result').innerHTML = recommendation + brandList;
+    });
+    </script>
+</body>
+</html>
